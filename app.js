@@ -12,9 +12,18 @@ app.use(bodyParser.json());
 // CORS
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // allow all domains
-  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  const origin = req.headers.origin;
+
+  const allowed = ["https://eats-sprint.vercel.app", "http://localhost:5173"];
+
+  if (allowed.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   if (req.method === "OPTIONS") return res.sendStatus(200);
 
   next();
